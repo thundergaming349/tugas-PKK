@@ -86,7 +86,7 @@ export default function Register() {
             <div className="w-12 h-12 rounded-xl bg-sidebar flex items-center justify-center">
               <IoSchoolOutline className="text-white text-2xl" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-800">LMS</h1>
+            <h1 className="text-2xl font-bold text-gray-800">PintarApps</h1>
           </div>
 
           <div className="mb-8">
