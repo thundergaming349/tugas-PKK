@@ -31,4 +31,26 @@ class User extends Authenticatable
     {
         return $this->hasMany(Subject::class, 'teacher_id', 'id');
     }
+
+    public static function checkAndAddOngoingSessionAttendance($userId, $classId)
+    {
+        $today = now()->addHours(7)->format('Y-m-d');
+        $currentTime = now()->addHours(7)->format('H:i:s');
+
+        $ongoingSessions = \App\Models\Session::where('class_id', $classId)
+            ->where('date', $today)
+            ->where('start', '<=', $currentTime)
+            ->where('end', '>=', $currentTime)
+            ->where('hidden', false)
+            ->get();
+
+        foreach ($ongoingSessions as $session) {
+            \App\Models\Attendance::firstOrCreate([
+                'student_id' => $userId,
+                'session_id' => $session->id,
+            ], [
+                'status' => 'alfa'
+            ]);
+        }
+    }
 }

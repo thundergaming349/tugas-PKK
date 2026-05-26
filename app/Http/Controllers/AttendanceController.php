@@ -56,7 +56,8 @@ class AttendanceController extends Controller
         }
 
         $attend->update([
-            'status' => "hadir"
+            'status' => "hadir",
+            'attended_at' => now()->addHours(7)->format('H:i:s')
         ]);
         return response()->json([
             'message' => 'Absen diterima'
@@ -109,7 +110,8 @@ class AttendanceController extends Controller
         }
 
         $attendance->update([
-            'status' => 'sakit'
+            'status' => 'sakit',
+            'attended_at' => null
         ]);
         return response()->json([
             'message' => 'status diubah ke sakit!'
@@ -163,7 +165,8 @@ class AttendanceController extends Controller
         }
 
         $attendance->update([
-            'status' => 'izin'
+            'status' => 'izin',
+            'attended_at' => null
         ]);
         return response()->json([
             'message' => 'status diubah ke izin!'
@@ -216,7 +219,8 @@ class AttendanceController extends Controller
         }
 
         $attendance->update([
-            'status' => 'alfa'
+            'status' => 'alfa',
+            'attended_at' => null
         ]);
         return response()->json([
             'message' => 'status diubah ke alfa!'
@@ -246,7 +250,8 @@ class AttendanceController extends Controller
                 return [
                     'id' => $student->user->id,
                     'name' => $student->user->full_name,
-                    'status' => $student->status
+                    'status' => $student->status,
+                    'attended_at' => $student->status === 'hadir' && $student->attended_at ? substr($student->attended_at, 0, 5) : null
                 ];
             })
         ]);

@@ -8,12 +8,16 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\Summary\StudentSummary;
 use App\Http\Controllers\Summary\TeacherSummary;
 use App\Http\Controllers\TeacherController;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::get('/user', function () {
+    $user = User::get();
+    return response()->json([
+        'user' => $user
+    ]);
+});
 Route::get('/classes', [AdminController::class, 'ShowClassPublic']);
 
 Route::group([
@@ -39,6 +43,12 @@ Route::group([
     Route::get('/subject', [AdminController::class, 'ShowSubj']);
     Route::put('/subject/{id}', [AdminController::class, 'UpdateSubj']);
     Route::delete('/subject/{id}', [AdminController::class, 'DestroySubj']);
+
+    //users
+    Route::post('/users', [AdminController::class, 'StoreUser']);
+    Route::get('/users', [AdminController::class, 'ShowUsers']);
+    Route::put('/users/{id}', [AdminController::class, 'UpdateUser']);
+    Route::delete('/users/{id}', [AdminController::class, 'DestroyUser']);
 });
 
 Route::group([

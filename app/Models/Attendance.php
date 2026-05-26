@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 
 #[Table(incrementing: true, timestamps:true)]
-#[Fillable(['student_id', 'session_id', 'status'])]
+#[Fillable(['student_id', 'session_id', 'status', 'attended_at'])]
 class Attendance extends Model
 {
     public function User() {

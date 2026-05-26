@@ -49,6 +49,8 @@ class AuthController extends Controller
             'class_id' => $request['class_id']
         ]);
 
+        User::checkAndAddOngoingSessionAttendance($student->id, $request['class_id']);
+
         return response()->json([
             'message' => 'Account successfully created'
         ], 201);
@@ -64,11 +66,19 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $token = $user->first()->createToken('auth')->plainTextToken;
+        $loggedInUser = $user->first();
+        if ($loggedInUser->role === 'siswa') {
+            $studentRelation = $loggedInUser->Student()->first();
+            if ($studentRelation) {
+                User::checkAndAddOngoingSessionAttendance($loggedInUser->id, $studentRelation->class_id);
+            }
+        }
+
+        $token = $loggedInUser->createToken('auth')->plainTextToken;
         return response()->json([
             'message' => 'login success',
             'token' => $token,
-            'user' => $user->first()
+            'user' => $loggedInUser
         ]);
     }
 
