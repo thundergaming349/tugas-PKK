@@ -308,7 +308,16 @@ export default function TeacherSessionDetail() {
               <tbody>
                 {students.map((student) => (
                   <tr key={student.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                    <td className="table-cell font-medium">{student.name}</td>
+                    <td className="table-cell font-medium">
+                      <div>
+                        <span>{student.name}</span>
+                        {student.status === 'hadir' && student.attended_at && (
+                          <span className="text-xs text-gray-400 font-normal block mt-0.5">
+                            Absen pada: {student.attended_at}
+                          </span>
+                        )}
+                      </div>
+                    </td>
                     <td className="table-cell">
                       <span className={statusBadge(student.status)}>
                         {student.status.charAt(0).toUpperCase() + student.status.slice(1)}

@@ -27,7 +27,7 @@ import TeacherSummary from './pages/teacher/Summary';
 import AdminDashboard from './pages/admin/Dashboard';
 import SubjectManagement from './pages/admin/SubjectManagement';
 import ClassManagement from './pages/admin/ClassManagement';
-import StudentManagement from './pages/admin/StudentManagement';
+import UserManagement from './pages/admin/UserManagement';
 
 function RedirectByRole() {
   const { user, token } = useAuth();
@@ -88,7 +88,7 @@ export default function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/subjects" element={<SubjectManagement />} />
         <Route path="/admin/classes" element={<ClassManagement />} />
-        <Route path="/admin/students" element={<StudentManagement />} />
+        <Route path="/admin/users" element={<UserManagement />} />
       </Route>
 
       {/* Default / Catch-all */}

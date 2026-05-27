@@ -16,13 +16,14 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
         setLoading(true);
         try {
-            const res = await login(email, password);
+            const res = await login(email, password, rememberMe);
         } catch (err) {
             setError(
                 err.response?.data?.message ||
@@ -167,6 +168,24 @@ export default function Login() {
                                     )}
                                 </button>
                             </div>
+                        </div>
+
+                        <div className="flex items-center justify-between py-1">
+                            <label className="flex items-center gap-3 cursor-pointer group select-none">
+                                <input
+                                    type="checkbox"
+                                    checked={rememberMe}
+                                    onChange={(e) => setRememberMe(e.target.checked)}
+                                    className="sr-only"
+                                    id="login-remember-me"
+                                />
+                                <div className={`relative w-10 h-6 rounded-full transition-colors duration-300 ease-in-out ${rememberMe ? 'bg-sidebar' : 'bg-gray-200'}`}>
+                                    <div className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-md transform transition-transform duration-300 ease-in-out ${rememberMe ? 'translate-x-4' : 'translate-x-0'}`}></div>
+                                </div>
+                                <span className="text-sm font-medium text-gray-600 group-hover:text-gray-800 transition-colors">
+                                    Remember Me
+                                </span>
+                            </label>
                         </div>
 
                         <button

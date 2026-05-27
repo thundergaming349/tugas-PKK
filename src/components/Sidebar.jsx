@@ -47,7 +47,7 @@ const menuConfig = {
             icon: IoBookOutline,
         },
         { label: "Kelas", path: "/admin/classes", icon: IoSchoolOutline },
-        { label: "Siswa", path: "/admin/students", icon: IoPeopleOutline },
+        { label: "User", path: "/admin/users", icon: IoPeopleOutline },
     ],
 };
 

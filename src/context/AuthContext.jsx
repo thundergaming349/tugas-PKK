@@ -10,10 +10,33 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Load user & token from localStorage on mount
+  // Load user & token from storage on mount
   useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('user');
+    let savedToken = localStorage.getItem('token');
+    let savedUser = localStorage.getItem('user');
+
+    if (savedToken && savedUser) {
+      const loginTime = localStorage.getItem('login_time');
+      const rememberMe = localStorage.getItem('remember_me') === 'true';
+      const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+      if (rememberMe && loginTime && (Date.now() - parseInt(loginTime, 10) > sevenDays)) {
+        // Expired! Clear localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('login_time');
+        localStorage.removeItem('remember_me');
+        savedToken = null;
+        savedUser = null;
+      }
+    }
+
+    // Check sessionStorage if not found/expired in localStorage
+    if (!savedToken || !savedUser) {
+      savedToken = sessionStorage.getItem('token');
+      savedUser = sessionStorage.getItem('user');
+    }
+
     if (savedToken && savedUser) {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
@@ -21,12 +44,28 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email, password, rememberMe = false) => {
     const response = await api.post('/auth/login', { email, password });
     const { token: newToken, user: userData } = response.data;
 
-    localStorage.setItem('token', newToken);
-    localStorage.setItem('user', JSON.stringify(userData));
+    if (rememberMe) {
+      localStorage.setItem('token', newToken);
+      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem('login_time', Date.now().toString());
+      localStorage.setItem('remember_me', 'true');
+
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user');
+    } else {
+      sessionStorage.setItem('token', newToken);
+      sessionStorage.setItem('user', JSON.stringify(userData));
+
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('login_time');
+      localStorage.removeItem('remember_me');
+    }
+
     setToken(newToken);
     setUser(userData);
 
@@ -59,6 +98,12 @@ export function AuthProvider({ children }) {
     }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('login_time');
+    localStorage.removeItem('remember_me');
+
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+
     setToken(null);
     setUser(null);
     navigate('/login');
